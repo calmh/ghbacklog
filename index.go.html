@@ -1,0 +1,41 @@
+<html>
+<head>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+	<style>
+	body {
+		margin: 40px;
+	}
+	img {
+		max-width: 100%;
+	}
+	</style>
+	<title>Backlog</title>
+</head>
+<body>
+<div class="container">
+	<h1>Backlog for {{.repo}}</h1>
+	<p class="text-muted">Issues per milestone. Updated {{now.Format "2006-01-02 15:04:05 -07:00"}}.</p>
+{{range .milestones}}
+	<hr/>
+	<h2>{{.Title}}</h2>
+	<p>{{.Description}}</p>
+
+	{{range .Issues}}
+		<h3>{{if .PullRequest.URL}}PR by {{.User.Login}}: {{end}}<a href="{{.HTMLURL}}">#{{.Number}}</a>: {{.Title}}</h3>
+		<p class="labels">
+			<small><a href="#issue{{.Number}}" data-toggle="collapse">Details<span class="caret"></span></a></small>
+			<span class="label label-default">{{.Created.Format "2006-01-02"}}</span>
+			{{if .Assignee.Login}}<span class="label label-primary">{{.Assignee.Login}}</span>{{end}}
+			{{range .Labels}}<span class="label label-{{labelClass .Name}}">{{.Name}}</span> {{end}}
+		</p>
+		<div id="issue{{.Number}}" class="collapse">
+			<div class="body">{{.BodyHTML}}</div>
+		</div>
+	{{end}}
+{{end}}
+</div>
+</body>
+</html>
